@@ -5,13 +5,15 @@
 [![GitHub release](https://img.shields.io/github/release/ciromattia/kcc.svg)](https://github.com/ciromattia/kcc/releases)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ciromattia/kcc/docker-publish.yml?label=docker%20build)](https://github.com/ciromattia/kcc/pkgs/container/kcc)
 
-
-**Kindle Comic Converter** is a Python app to convert comic/manga files or folders to EPUB, Panel View MOBI or E-Ink optimized CBZ.
-It was initially developed for Kindle but since version 4.6 it outputs valid EPUB 3.0 so _**despite its name, KCC is
-actually a comic/manga to EPUB converter that every e-reader owner can happily use**_.
-It can also optionally optimize images by applying a number of transformations.
+**Kindle Comic Converter** optimizes comics and manga for eink readers like Kindle, Kobo, ReMarkable, and more. 
+Its main feature is various optional image processing steps to look good on eink screens, 
+which have different requirements than normal LCD screens.
+Supported input formats include folders/CBZ/CBR/PDF of JPG/PNG files and more.
+Supported output formats include MOBI/AZW3, EPUB, KEPUB, and CBZ.
 
 ![image](https://github.com/user-attachments/assets/36ad2131-6677-4559-bd6f-314a90c27218)
+
+YouTube tutorial (please subscribe): https://www.youtube.com/watch?v=IR2Fhcm9658
 
 ### A word of warning
 **KCC** _is not_ [Amazon's Kindle Comic Creator](http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1001103761) nor is in any way endorsed by Amazon.
@@ -31,7 +33,8 @@ If you find **KCC** valuable you can consider donating to the authors:
   - [![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YTTJ4LK2JDHPS)
   - [![Donate Bitcoin](https://img.shields.io/badge/Donate-Bitcoin-green.svg)](https://jastrzeb.ski/donate/)
 - Alex Xu (active 2023-Present)
-  - [![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?business=QFJVE7A6LCP6U&no_recurring=0&item_name=Kindle+Comic+Converter&currency_code=USD)
+
+  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q41BW8HS)
 
 ## Sponsors
 
@@ -60,6 +63,9 @@ For flatpak, Docker, and AppImage versions, refer to the wiki: https://github.co
 - [Windows 7 support](https://github.com/ciromattia/kcc/issues/678)
 - [Combine files/chapters](https://github.com/ciromattia/kcc/issues/612#issuecomment-2117985011)
 - [Flatpak mobi conversion stuck](https://github.com/ciromattia/kcc/wiki/Installation#linux)
+- Image too dark?
+  - The default gamma correction of 1.8 makes the image darker, and is useful for faded/gray artwork/text. Disable by setting gamma = 1.0
+- [Better PDF support (Humble Bundle, Fanatical, etc)](https://github.com/ciromattia/kcc/issues/680)
 
 ## PREREQUISITES
 

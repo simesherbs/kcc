@@ -358,19 +358,19 @@ def buildOPF(dstdir, title, filelist, cover=None):
             pageside = "right"
     for entry in reflist:
         if options.righttoleft:
-            if entry.endswith("-a"):
+            if entry.endswith("-kcc-a"):
                 f.write(
                     "<itemref idref=\"page_%s\" %s/>\n" % (entry,
                                                             pageSpreadProperty("center"))
                 )
                 pageside = "right"
-            elif entry.endswith("-b"):
+            elif entry.endswith("-kcc-b"):
                 f.write(
                     "<itemref idref=\"page_%s\" %s/>\n" % (entry,
                                                             pageSpreadProperty("right"))
                 )
                 pageside = "right"
-            elif entry.endswith("-c"):
+            elif entry.endswith("-kcc-c"):
                 f.write(
                     "<itemref idref=\"page_%s\" %s/>\n" % (entry,
                                                             pageSpreadProperty("left"))
@@ -386,19 +386,19 @@ def buildOPF(dstdir, title, filelist, cover=None):
                 else:
                     pageside = "right"
         else:
-            if entry.endswith("-a"):
+            if entry.endswith("-kcc-a"):
                 f.write(
                     "<itemref idref=\"page_%s\" %s/>\n" % (entry,
                                                             pageSpreadProperty("center"))
                 )
                 pageside = "left"
-            elif entry.endswith("-b"):
+            elif entry.endswith("-kcc-b"):
                 f.write(
                     "<itemref idref=\"page_%s\" %s/>\n" % (entry,
                                                             pageSpreadProperty("left"))
                 )
                 pageside = "left"
-            elif entry.endswith("-c"):
+            elif entry.endswith("-kcc-c"):
                 f.write(
                     "<itemref idref=\"page_%s\" %s/>\n" % (entry,
                                                             pageSpreadProperty("right"))
@@ -544,7 +544,7 @@ def buildEPUB(path, chapternames, tomenumber, ischunked):
             global_diff = 0
 
             for x in range(0, pageid + cur_diff + 1):
-                if '-KCC-B' in filelist[x][1]:
+                if '-kcc-b' in filelist[x][1]:
                     pageid += diff_delta
                     global_diff += diff_delta
 
@@ -820,6 +820,14 @@ def sanitizeTree(filetree):
     return chapterNames
 
 
+def flattenTree(filetree):
+    for root, dirs, files in os.walk(filetree, topdown=False):
+        for name in files:
+            os.rename(os.path.join(root, name), os.path.join(filetree, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+
+
 def sanitizePermissions(filetree):
     for root, dirs, files in os.walk(filetree, False):
         for name in files:
@@ -835,7 +843,8 @@ def chunk_directory(path):
             if getImageFileName(f):
                 newLevel = os.path.join(root, f).replace(os.path.join(path, 'OEBPS', 'Images'), '').count(os.sep)
                 if level != -1 and level != newLevel:
-                    level = 0
+                    flattenTree(os.path.join(path, 'OEBPS', 'Images'))
+                    level = 1
                     break
                 else:
                     level = newLevel
@@ -862,6 +871,14 @@ def chunk_process(path, mode, parent):
         targetSize = 419430400
     if options.batchsplit == 2 and mode == 2:
         mode = 3
+    if options.batchsplit == 1 and mode == 2:
+        with os.scandir(path) as it:
+            for entry in it:
+                if not entry.name.startswith('.') and entry.is_dir():
+                    if getDirectorySize(os.path.join(path, entry)) > targetSize:
+                        flattenTree(path)
+                        mode = 1
+                        break
     if mode < 3:
         for root, dirs, files in walkLevel(path, 0):
             for name in files if mode == 1 else dirs:
@@ -1074,6 +1091,12 @@ def checkOptions(options):
     if options.format == 'EPUB-200MB':
         options.targetsize = 195
         options.format = 'EPUB'
+        if options.batchsplit != 2:
+            options.batchsplit = 1
+    if options.format == 'MOBI+EPUB-200MB':
+        options.keep_epub = True
+        options.targetsize = 195
+        options.format = 'MOBI'
         if options.batchsplit != 2:
             options.batchsplit = 1
     if options.format == 'MOBI+EPUB':
